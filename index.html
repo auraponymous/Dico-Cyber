@@ -112,30 +112,48 @@
 
   /* Alpha tabs */
   .alpha-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 6px;
     margin-bottom: 1.5rem;
   }
 
   .alpha-btn {
-    padding: 4px 9px;
+    aspect-ratio: 1;
+    width: 100%;
+    padding: 0;
     border-radius: var(--radius-sm);
-    border: 1.5px solid var(--c-border);
+    border: 1.5px solid #0000FF;
     background: var(--c-surface);
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
-    color: var(--c-muted);
+    color: #0000FF;
     transition: all 0.12s;
-    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .alpha-btn:hover { border-color: var(--c-accent); color: var(--c-accent); }
-  .alpha-btn.active { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
-  .alpha-btn.empty { opacity: 0.35; cursor: default; pointer-events: none; }
+  .alpha-btn:hover { background: #0000FF; color: #fff; }
+  .alpha-btn.active { background: #0000FF; border-color: #0000FF; color: #fff; }
+  .alpha-btn.empty { opacity: 0.2; cursor: default; pointer-events: none; border-color: var(--c-border); color: var(--c-muted); }
 
   /* Stats bar */
+  #intro {
+    background: var(--c-surface);
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+    color: var(--c-text);
+  }
+
+  #intro p { margin-bottom: 1.1rem; }
+  #intro p:last-child { margin-bottom: 0; }
+
   #statsBar {
     font-size: 0.78rem;
     color: var(--c-muted);
@@ -286,9 +304,42 @@
     </button>
   </div>
 
-  <div class="alpha-nav" id="alphNav"></div>
+  <div class="alpha-nav" id="alphNav">
+    <button class="alpha-btn" data-l="A">A</button>
+    <button class="alpha-btn" data-l="B">B</button>
+    <button class="alpha-btn" data-l="C">C</button>
+    <button class="alpha-btn" data-l="D">D</button>
+    <button class="alpha-btn" data-l="E">E</button>
+    <button class="alpha-btn" data-l="F">F</button>
+    <button class="alpha-btn" data-l="G">G</button>
+    <button class="alpha-btn" data-l="H">H</button>
+    <button class="alpha-btn" data-l="I">I</button>
+    <button class="alpha-btn" data-l="J">J</button>
+    <button class="alpha-btn" data-l="K">K</button>
+    <button class="alpha-btn" data-l="L">L</button>
+    <button class="alpha-btn" data-l="M">M</button>
+    <button class="alpha-btn" data-l="N">N</button>
+    <button class="alpha-btn" data-l="O">O</button>
+    <button class="alpha-btn" data-l="P">P</button>
+    <button class="alpha-btn" data-l="Q">Q</button>
+    <button class="alpha-btn" data-l="R">R</button>
+    <button class="alpha-btn" data-l="S">S</button>
+    <button class="alpha-btn" data-l="T">T</button>
+    <button class="alpha-btn" data-l="U">U</button>
+    <button class="alpha-btn" data-l="V">V</button>
+    <button class="alpha-btn" data-l="W">W</button>
+    <button class="alpha-btn" data-l="X">X</button>
+    <button class="alpha-btn" data-l="Y">Y</button>
+    <button class="alpha-btn" data-l="Z">Z</button>
+  </div>
 
-  <div id="statsBar"></div>
+  <div id="intro">
+    <p>Le cyberespace occupe aujourd'hui une place centrale dans nos sociétés. Il structure les communications, les échanges économiques, les infrastructures critiques, les activités des États et une part croissante de nos interactions quotidiennes. Longtemps perçu comme un domaine réservé aux informaticiens, il est devenu un espace où se rencontrent technologies, stratégies, intérêts économiques, enjeux politiques et comportements humains.</p>
+    <p>Ce dictionnaire a pour ambition d'éclairer cet univers complexe à travers ses principaux concepts, acteurs, techniques, organisations et événements. Le lecteur y trouvera aussi bien des notions fondamentales liées au fonctionnement des réseaux et des systèmes informatiques que des termes issus de la cybersécurité, du renseignement, de la réglementation, de l'économie numérique, de l'influence informationnelle ou encore de la géopolitique.</p>
+    <p>Les entrées ont été conçues pour être accessibles aux non-spécialistes tout en conservant la rigueur nécessaire à une bonne compréhension des enjeux contemporains. Elles privilégient les usages les plus courants du vocabulaire cyber, qu'il soit technique, institutionnel ou opérationnel, et s'appuient autant que possible sur des exemples concrets.</p>
+    <p>Parce que le cyberespace ne se résume ni à la technique ni à la sécurité, ce dictionnaire explore également ses dimensions humaines, culturelles et historiques. Il invite ainsi le lecteur à découvrir non seulement les outils et les menaces qui façonnent le monde numérique, mais aussi les idées, les pratiques et les rapports de force qui l'animent.</p>
+  </div>
+  <div id="statsBar" style="display:none"></div>
   <div id="entries"></div>
 
 </div>
@@ -352,22 +403,22 @@ function getLettersWithEntries() {
 function buildAlphNav() {
   const nav = document.getElementById('alphNav');
   const present = getLettersWithEntries();
-  let html = `<button class="alpha-btn active" data-l="ALL">Tous</button>`;
-  LETTERS.forEach(l => {
-    const has = present.has(l);
-    html += `<button class="alpha-btn${has ? '' : ' empty'}" data-l="${l}">${l}</button>`;
-  });
-  nav.innerHTML = html;
-  nav.addEventListener('click', e => {
-    const btn = e.target.closest('.alpha-btn');
-    if (!btn) return;
-    currentLetter = btn.dataset.l;
-    searchQuery = '';
-    document.getElementById('searchInput').value = '';
-    nav.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b === btn));
-    render();
+  // Marque les lettres sans entrées
+  nav.querySelectorAll('.alpha-btn[data-l]').forEach(btn => {
+    const l = btn.dataset.l;
+    if (l !== 'ALL') btn.classList.toggle('empty', !present.has(l));
   });
 }
+
+document.getElementById('alphNav').addEventListener('click', e => {
+  const btn = e.target.closest('.alpha-btn');
+  if (!btn) return;
+  currentLetter = btn.dataset.l;
+  searchQuery = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b === btn));
+  render();
+});
 
 function highlight(text, query) {
   if (!query) return text;
@@ -377,6 +428,17 @@ function highlight(text, query) {
 
 function render() {
   const q = normalize(searchQuery);
+  const isActive = q || currentLetter !== 'ALL';
+
+  // Bascule intro / liste
+  document.getElementById('intro').style.display = isActive ? 'none' : 'block';
+  document.getElementById('statsBar').style.display = isActive ? 'block' : 'none';
+
+  if (!isActive) {
+    document.getElementById('entries').innerHTML = '';
+    return;
+  }
+
   let filtered = ALL;
 
   if (q) {
