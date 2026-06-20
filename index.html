@@ -338,7 +338,6 @@
       <input type="text" id="searchInput" placeholder="Rechercher un terme…" autocomplete="off" />
       <div id="suggestions"></div>
     </div>
-    <button id="searchBtn" style="padding:0.65rem 1.2rem;background:#0000FF;color:#fff;border:none;border-radius:var(--radius);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;">Rechercher</button>
     <button id="randomBtn" style="padding:0.65rem 1.2rem;background:transparent;color:#0000FF;border:1.5px solid #0000FF;border-radius:var(--radius);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.15s;">Random</button>
   </div>
 
@@ -540,15 +539,6 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
     }
     sugg.classList.remove('open');
   } else if (e.key === 'Escape') {
-    sugg.classList.remove('open');
-  }
-});
-
-document.getElementById('searchBtn').addEventListener('click', () => {
-  const sugg = document.getElementById('suggestions');
-  if (sugg._matches && sugg._matches.length) {
-    showEntry(sugg._matches[0]);
-    document.getElementById('searchInput').value = sugg._matches[0].terme;
     sugg.classList.remove('open');
   }
 });
