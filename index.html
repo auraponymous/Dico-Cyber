@@ -430,7 +430,6 @@ function render() {
           <div class="entry-term">${highlight(terme, q)}</div>
           <div class="entry-def-short" style="font-weight:700;color:var(--c-text)">${highlight(def, q)}</div>
         </div>
-        <svg class="expand-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="entry-body">
         ${precision ? `<div class="field-label">Précision</div><div class="field-content">${highlight(precision, q)}</div>` : ''}
@@ -442,27 +441,25 @@ function render() {
 
   const el = document.getElementById('entries');
   el.innerHTML = html;
+}
 
-  // Toggle expand
-  el.addEventListener('click', e => {
-    const entry = e.target.closest('.entry');
-    if (!entry) return;
+function handleEntryClick(e) {
+  // Clic sur un tag → recherche
+  const tag = e.target.closest('.tag');
+  if (tag) {
+    e.stopPropagation();
+    const s = tag.dataset.search;
+    document.getElementById('searchInput').value = s;
+    searchQuery = s;
+    currentLetter = 'ALL';
+    document.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b.dataset.l === 'ALL'));
+    render();
+    return;
+  }
 
-    // Clic sur un tag → recherche
-    const tag = e.target.closest('.tag');
-    if (tag) {
-      e.stopPropagation();
-      const s = tag.dataset.search;
-      document.getElementById('searchInput').value = s;
-      searchQuery = s;
-      currentLetter = 'ALL';
-      document.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b.dataset.l === 'ALL'));
-      render();
-      return;
-    }
-
-    entry.classList.toggle('expanded');
-  });
+  const entry = e.target.closest('.entry');
+  if (!entry) return;
+  entry.classList.toggle('expanded');
 }
 
 // Search
@@ -489,6 +486,9 @@ document.getElementById('randomBtn').addEventListener('click', () => {
     first?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 50);
 });
+
+// Listener unique sur le container stable — ne se ré-attache pas à chaque render
+document.getElementById('entries').addEventListener('click', handleEntryClick);
 
 loadData();
 </script>
