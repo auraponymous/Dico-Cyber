@@ -385,11 +385,10 @@ async function loadData() {
 
     ALL = dataRows.map(r => ({
       terme:       r.c[0]?.v ?? '',
-      variante:    r.c[1]?.v ?? '',
-      definition:  r.c[2]?.v ?? '',
-      precision:   r.c[3]?.v ?? '',
-      explication: r.c[4]?.v ?? '',
-      renvois:     r.c[5]?.v ?? '',
+      definition:  r.c[1]?.v ?? '',
+      precision:   r.c[2]?.v ?? '',
+      explication: r.c[3]?.v ?? '',
+      renvois:     r.c[4]?.v ?? '',
     })).filter(r => r.terme);
 
     const count = ALL.length;
@@ -466,17 +465,12 @@ function showSuggestions(q) {
   const sugg = document.getElementById('suggestions');
   if (!q) { sugg.classList.remove('open'); return; }
 
-  const q_norm = normalize(q);
-  const matches = ALL.filter(e =>
-    normalize(e.terme).includes(q_norm) ||
-    normalize(e.variante || '').includes(q_norm)
-  ).slice(0, 8);
+  const matches = ALL.filter(e => normalize(e.terme).includes(normalize(q))).slice(0, 8);
   if (!matches.length) { sugg.classList.remove('open'); return; }
 
-  sugg.innerHTML = matches.map((e, i) => {
-    const matchesVariante = !normalize(e.terme).includes(q_norm) && normalize(e.variante || '').includes(q_norm);
-    return `<div class="suggestion-item" data-idx="${i}">${e.terme}${matchesVariante ? `<span style="color:var(--c-muted);font-size:0.78rem;margin-left:6px;font-style:italic;">${e.variante}</span>` : ''}</div>`;
-  }).join('');
+  sugg.innerHTML = matches.map((e, i) =>
+    `<div class="suggestion-item" data-idx="${i}">${e.terme}</div>`
+  ).join('');
   sugg._matches = matches;
   sugg.classList.add('open');
 }
