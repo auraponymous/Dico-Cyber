@@ -315,15 +315,20 @@ async function loadData() {
     // Google renvoie du JSON enrobé dans une fonction callback
     const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1]);
     const rows = json.table.rows;
-    const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
 
-    ALL = rows.map(r => {
-      const obj = {};
-      cols.forEach((col, i) => {
-        obj[col] = r.c[i]?.v ?? '';
-      });
-      return obj;
-    }).filter(r => r.terme || r['terme']); // filtre lignes vides
+    // Google ne renvoie pas les labels de colonnes — on lit par position
+    // A=0 terme, B=1 definition, C=2 precision, D=3 explication, E=4 renvois
+    const firstRow = rows[0]?.c?.map(c => (c?.v || '').toLowerCase().trim()) || [];
+    const hasHeader = firstRow.includes('terme');
+    const dataRows = hasHeader ? rows.slice(1) : rows;
+
+    ALL = dataRows.map(r => ({
+      terme:       r.c[0]?.v ?? '',
+      definition:  r.c[1]?.v ?? '',
+      precision:   r.c[2]?.v ?? '',
+      explication: r.c[3]?.v ?? '',
+      renvois:     r.c[4]?.v ?? '',
+    })).filter(r => r.terme);
 
     const count = ALL.length;
     document.getElementById('lastUpdate').textContent = `${count} terme${count > 1 ? 's' : ''} · mis à jour automatiquement`;
