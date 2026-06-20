@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dictionnaire Cybersécurité</title>
+<style>
+  :root {
+    --c-bg: #f8f9fb;
+    --c-surface: #ffffff;
+    --c-border: rgba(0,0,0,0.1);
+    --c-border-hover: rgba(0,0,0,0.2);
+    --c-text: #1a1a2e;
+    --c-muted: #6b7280;
+    --c-accent: #1d4ed8;
+    --c-accent-light: #eff6ff;
+    --c-accent-border: #bfdbfe;
+    --c-tag-bg: #f1f5f9;
+    --c-tag-text: #475569;
+    --c-random-bg: #0f172a;
+    --c-random-text: #ffffff;
+    --radius: 10px;
+    --radius-sm: 6px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--c-bg);
+    color: var(--c-text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--c-random-bg);
+    color: var(--c-random-text);
+    padding: 2rem 1.5rem 1.5rem;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+
+  header p {
+    font-size: 0.85rem;
+    opacity: 0.55;
+    font-weight: 400;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+  }
+
+  /* Search + random bar */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .search-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--c-muted);
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 0.65rem 1rem 0.65rem 2.5rem;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    background: var(--c-surface);
+    color: var(--c-text);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  #searchInput:focus { border-color: var(--c-accent); }
+
+  #randomBtn {
+    padding: 0.65rem 1rem;
+    background: var(--c-random-bg);
+    color: var(--c-random-text);
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.15s;
+  }
+
+  #randomBtn:hover { opacity: 0.85; }
+
+  /* Alpha tabs */
+  .alpha-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .alpha-btn {
+    padding: 4px 9px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--c-border);
+    background: var(--c-surface);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--c-muted);
+    transition: all 0.12s;
+    letter-spacing: 0.03em;
+  }
+
+  .alpha-btn:hover { border-color: var(--c-accent); color: var(--c-accent); }
+  .alpha-btn.active { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+  .alpha-btn.empty { opacity: 0.35; cursor: default; pointer-events: none; }
+
+  /* Stats bar */
+  #statsBar {
+    font-size: 0.78rem;
+    color: var(--c-muted);
+    margin-bottom: 1rem;
+  }
+
+  /* Entry card */
+  .entry {
+    background: var(--c-surface);
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.15s;
+    cursor: pointer;
+  }
+
+  .entry:hover { border-color: var(--c-border-hover); }
+  .entry.expanded { border-color: var(--c-accent-border); }
+
+  .entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .entry-term {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--c-text);
+  }
+
+  .entry-def-short {
+    font-size: 0.85rem;
+    color: var(--c-muted);
+    margin-top: 0.3rem;
+    line-height: 1.5;
+  }
+
+  .expand-icon {
+    color: var(--c-muted);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  .entry.expanded .expand-icon { transform: rotate(180deg); }
+
+  .entry-body {
+    display: none;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1.5px solid var(--c-border);
+  }
+
+  .entry.expanded .entry-body { display: block; }
+
+  .field-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    margin-bottom: 0.3rem;
+    margin-top: 0.9rem;
+  }
+
+  .field-label:first-child { margin-top: 0; }
+
+  .field-content {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--c-text);
+  }
+
+  .field-content.italic { font-style: italic; }
+  .field-content.bold { font-weight: 700; }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0.3rem;
+  }
+
+  .tag {
+    background: var(--c-tag-bg);
+    color: var(--c-accent);
+    border: 1px solid var(--c-accent-border);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+
+  .tag:hover { background: var(--c-accent-light); }
+
+  /* Loading / empty */
+  .state-msg {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--c-muted);
+    font-size: 0.9rem;
+  }
+
+  .letter-group-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    padding: 0.5rem 0 0.5rem;
+    margin-top: 0.5rem;
+    border-bottom: 1px solid var(--c-border);
+    margin-bottom: 0.75rem;
+  }
+
+  mark { background: #fef08a; border-radius: 2px; padding: 0 1px; }
+
+  @media (max-width: 600px) {
+    header { padding: 1.5rem 1rem 1rem; }
+    .toolbar { flex-direction: column; }
+    #randomBtn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container" style="padding-top:0;padding-bottom:0;">
+    <h1>Dictionnaire Cybersécurité</h1>
+    <p id="lastUpdate">Chargement…</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Rechercher un terme…" autocomplete="off" />
+    </div>
+    <button id="randomBtn">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+      Mot au hasard
+    </button>
+  </div>
+
+  <div class="alpha-nav" id="alphNav"></div>
+
+  <div id="statsBar"></div>
+  <div id="entries"></div>
+
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+// Remplace SHEET_ID par l'ID de ton Google Sheet
+// Format colonnes attendues : terme | definition | precision | renvois
+const SHEET_ID = '1BAsZeJRP0eYepRGD6hVNmNpXw1kcMPkbbt7s_W7nkjA';
+const SHEET_NAME = 'DDB_Cyber'; // Nom exact de l'onglet
+// ───────────────────────────────────────────────────────────────────────────
+
+let ALL = [];
+let currentLetter = 'ALL';
+let searchQuery = '';
+
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+async function loadData() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    // Google renvoie du JSON enrobé dans une fonction callback
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1]);
+    const rows = json.table.rows;
+    const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
+
+    ALL = rows.map(r => {
+      const obj = {};
+      cols.forEach((col, i) => {
+        obj[col] = r.c[i]?.v ?? '';
+      });
+      return obj;
+    }).filter(r => r.terme || r['terme']); // filtre lignes vides
+
+    const count = ALL.length;
+    document.getElementById('lastUpdate').textContent = `${count} terme${count > 1 ? 's' : ''} · mis à jour automatiquement`;
+    buildAlphNav();
+    render();
+  } catch(e) {
+    document.getElementById('entries').innerHTML = `<div class="state-msg">⚠️ Impossible de charger les données.<br><small>Vérifie que le Google Sheet est bien partagé en lecture publique.</small></div>`;
+    console.error(e);
+  }
+}
+
+function normalize(str) {
+  return (str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function getLettersWithEntries() {
+  const set = new Set(ALL.map(e => normalize(e.terme || '')[0]?.toUpperCase()));
+  return set;
+}
+
+function buildAlphNav() {
+  const nav = document.getElementById('alphNav');
+  const present = getLettersWithEntries();
+  let html = `<button class="alpha-btn active" data-l="ALL">Tous</button>`;
+  LETTERS.forEach(l => {
+    const has = present.has(l);
+    html += `<button class="alpha-btn${has ? '' : ' empty'}" data-l="${l}">${l}</button>`;
+  });
+  nav.innerHTML = html;
+  nav.addEventListener('click', e => {
+    const btn = e.target.closest('.alpha-btn');
+    if (!btn) return;
+    currentLetter = btn.dataset.l;
+    searchQuery = '';
+    document.getElementById('searchInput').value = '';
+    nav.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b === btn));
+    render();
+  });
+}
+
+function highlight(text, query) {
+  if (!query) return text;
+  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return String(text).replace(re, '<mark>$1</mark>');
+}
+
+function render() {
+  const q = normalize(searchQuery);
+  let filtered = ALL;
+
+  if (q) {
+    filtered = ALL.filter(e =>
+      normalize(e.terme).includes(q) ||
+      normalize(e.definition || '').includes(q) ||
+      normalize(e.precision || '').includes(q) ||
+      normalize(e.explication || '').includes(q)
+    );
+  } else if (currentLetter !== 'ALL') {
+    filtered = ALL.filter(e => normalize(e.terme || '')[0]?.toUpperCase() === currentLetter);
+  }
+
+  filtered.sort((a, b) => normalize(a.terme).localeCompare(normalize(b.terme)));
+
+  const stats = document.getElementById('statsBar');
+  stats.textContent = q
+    ? `${filtered.length} résultat${filtered.length !== 1 ? 's' : ''} pour « ${searchQuery} »`
+    : currentLetter === 'ALL'
+      ? `${filtered.length} terme${filtered.length !== 1 ? 's' : ''} au total`
+      : `${filtered.length} terme${filtered.length !== 1 ? 's' : ''} commençant par ${currentLetter}`;
+
+  if (!filtered.length) {
+    document.getElementById('entries').innerHTML = `<div class="state-msg">Aucun terme trouvé.</div>`;
+    return;
+  }
+
+  let html = '';
+  let currentGroup = '';
+
+  filtered.forEach((e, idx) => {
+    const letter = normalize(e.terme || '')[0]?.toUpperCase() || '?';
+    const terme = e.terme || '';
+    const def = e.definition || '';
+    const precision = e.precision || '';
+    const explication = e.explication || '';
+    const renvois = e.renvois || '';
+
+    if (!q && letter !== currentGroup) {
+      currentGroup = letter;
+      html += `<div class="letter-group-label">${letter}</div>`;
+    }
+
+    const renvoisArr = renvois ? String(renvois).split(/[,;]+/).map(s => s.trim()).filter(Boolean) : [];
+    const tagsHtml = renvoisArr.map(r => `<span class="tag" data-search="${r}">${highlight(r, q)}</span>`).join('');
+
+    html += `
+    <div class="entry" id="entry-${idx}">
+      <div class="entry-header">
+        <div>
+          <div class="entry-term">${highlight(terme, q)}</div>
+          <div class="entry-def-short" style="font-weight:700;color:var(--c-text)">${highlight(def, q)}</div>
+        </div>
+        <svg class="expand-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="entry-body">
+        ${precision ? `<div class="field-label">Précision</div><div class="field-content">${highlight(precision, q)}</div>` : ''}
+        ${explication ? `<div class="field-label">Explication</div><div class="field-content italic">${highlight(explication, q)}</div>` : ''}
+        ${renvoisArr.length ? `<div class="field-label">Voir aussi</div><div class="tags">${tagsHtml}</div>` : ''}
+      </div>
+    </div>`;
+  });
+
+  const el = document.getElementById('entries');
+  el.innerHTML = html;
+
+  // Toggle expand
+  el.addEventListener('click', e => {
+    const entry = e.target.closest('.entry');
+    if (!entry) return;
+
+    // Clic sur un tag → recherche
+    const tag = e.target.closest('.tag');
+    if (tag) {
+      e.stopPropagation();
+      const s = tag.dataset.search;
+      document.getElementById('searchInput').value = s;
+      searchQuery = s;
+      currentLetter = 'ALL';
+      document.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b.dataset.l === 'ALL'));
+      render();
+      return;
+    }
+
+    entry.classList.toggle('expanded');
+  });
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  currentLetter = 'ALL';
+  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b.dataset.l === 'ALL'));
+  render();
+});
+
+// Random
+document.getElementById('randomBtn').addEventListener('click', () => {
+  if (!ALL.length) return;
+  const pick = ALL[Math.floor(Math.random() * ALL.length)];
+  searchQuery = pick.terme;
+  document.getElementById('searchInput').value = pick.terme;
+  currentLetter = 'ALL';
+  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b.dataset.l === 'ALL'));
+  render();
+  // Auto-expand le seul résultat
+  setTimeout(() => {
+    const first = document.querySelector('.entry');
+    if (first) first.classList.add('expanded');
+    first?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+});
+
+loadData();
+</script>
+</body>
+</html>
