@@ -396,7 +396,10 @@ async function loadData() {
     buildAlphNav();
     render();
   } catch(e) {
-    document.getElementById('entries').innerHTML = `<div class="state-msg">⚠️ Impossible de charger les données.<br><small>Vérifie que le Google Sheet est bien partagé en lecture publique.</small></div>`;
+    // N'afficher l'erreur que si l'intro est cachée (évite le message parasite au chargement)
+    if (document.getElementById('intro').style.display === 'none') {
+      document.getElementById('entries').innerHTML = `<div class="state-msg">⚠️ Impossible de charger les données.<br><small>Vérifie que le Google Sheet est bien partagé en lecture publique.</small></div>`;
+    }
     console.error(e);
   }
 }
@@ -584,6 +587,10 @@ document.getElementById('homeLink').addEventListener('click', e => {
 
 // Listener unique sur le container stable — ne se ré-attache pas à chaque render
 document.getElementById('entries').addEventListener('click', handleEntryClick);
+
+// Initialisation propre
+document.getElementById('entries').innerHTML = '';
+document.getElementById('intro').style.display = 'block';
 
 loadData();
 </script>
