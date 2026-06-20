@@ -451,10 +451,7 @@ function render() {
 
   if (q) {
     filtered = ALL.filter(e =>
-      normalize(e.terme).includes(q) ||
-      normalize(e.definition || '').includes(q) ||
-      normalize(e.precision || '').includes(q) ||
-      normalize(e.explication || '').includes(q)
+      normalize(e.terme).includes(q)
     );
   } else if (currentLetter !== 'ALL') {
     filtered = ALL.filter(e => normalize(e.terme || '')[0]?.toUpperCase() === currentLetter);
