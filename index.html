@@ -512,16 +512,35 @@ document.getElementById('searchInput').addEventListener('input', e => {
 });
 
 document.getElementById('searchInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    const sugg = document.getElementById('suggestions');
-    if (sugg._matches && sugg._matches.length) {
+  const sugg = document.getElementById('suggestions');
+  const items = sugg.querySelectorAll('.suggestion-item');
+  let highlighted = sugg.querySelector('.suggestion-item.highlighted');
+  let idx = Array.from(items).indexOf(highlighted);
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (highlighted) highlighted.classList.remove('highlighted');
+    idx = (idx + 1) % items.length;
+    items[idx].classList.add('highlighted');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (highlighted) highlighted.classList.remove('highlighted');
+    idx = (idx - 1 + items.length) % items.length;
+    items[idx].classList.add('highlighted');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') {
+    if (highlighted && sugg._matches) {
+      const entry = sugg._matches[Array.from(items).indexOf(highlighted)];
+      document.getElementById('searchInput').value = entry.terme;
+      showEntry(entry);
+    } else if (sugg._matches && sugg._matches.length) {
       showEntry(sugg._matches[0]);
       document.getElementById('searchInput').value = sugg._matches[0].terme;
     }
     sugg.classList.remove('open');
-  }
-  if (e.key === 'Escape') {
-    document.getElementById('suggestions').classList.remove('open');
+  } else if (e.key === 'Escape') {
+    sugg.classList.remove('open');
   }
 });
 
