@@ -114,9 +114,10 @@
   .alpha-nav {
     display: flex;
     flex-wrap: nowrap;
-    gap: 3px;
+    gap: 0;
     margin-bottom: 1.5rem;
     align-items: center;
+    justify-content: space-between;
   }
 
   .alpha-btn {
@@ -307,6 +308,7 @@
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Rechercher un terme…" autocomplete="off" />
     </div>
+    <button id="searchBtn" style="padding:0.65rem 1.2rem;background:#0000FF;color:#fff;border:none;border-radius:var(--radius);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;">Rechercher</button>
   </div>
 
   <div class="alpha-nav" id="alphNav">
@@ -418,8 +420,10 @@ function buildAlphNav() {
 }
 
 document.getElementById('alphNav').addEventListener('click', e => {
+  // Ignorer le bouton random
+  if (e.target.closest('#randomBtn')) return;
   const btn = e.target.closest('.alpha-btn');
-  if (!btn) return;
+  if (!btn || !btn.dataset.l) return;
   currentLetter = btn.dataset.l;
   searchQuery = '';
   document.getElementById('searchInput').value = '';
@@ -529,11 +533,16 @@ function handleEntryClick(e) {
 }
 
 // Search
-document.getElementById('searchInput').addEventListener('input', e => {
-  searchQuery = e.target.value;
+function doSearch() {
+  searchQuery = document.getElementById('searchInput').value;
   currentLetter = 'ALL';
-  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.toggle('active', b.dataset.l === 'ALL'));
+  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
   render();
+}
+
+document.getElementById('searchBtn').addEventListener('click', doSearch);
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
 });
 
 // Random
