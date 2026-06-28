@@ -12,7 +12,7 @@
     --c-border-hover: rgba(0,0,0,0.2);
     --c-text: #0000FF;
     --c-muted: #6b7280;
-    --c-accent: #1d4ed8;
+    --c-accent: #0000FF;
     --c-accent-light: #eff6ff;
     --c-accent-border: #bfdbfe;
     --c-tag-bg: #f1f5f9;
@@ -28,13 +28,15 @@
 
   body {
     background: var(--c-bg);
-    color: var(--c-text);
+    color: #1a1a2e;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
   header {
-    background: var(--c-random-bg);
-    color: var(--c-random-text);
+    background: #0000FF;
+    color: #ffffff;
     padding: 2rem 1.5rem 1.5rem;
   }
 
@@ -55,9 +57,10 @@
     max-width: 860px;
     margin: 0 auto;
     padding: 1.5rem 1rem;
+    flex: 1;
   }
 
-  /* Search + random bar */
+  /* Toolbar */
   .toolbar {
     display: flex;
     gap: 10px;
@@ -86,13 +89,14 @@
     border-radius: var(--radius);
     font-size: 0.9rem;
     background: var(--c-surface);
-    color: var(--c-text);
+    color: #1a1a2e;
     transition: border-color 0.15s;
     outline: none;
   }
 
-  #searchInput:focus { border-color: var(--c-accent); }
+  #searchInput:focus { border-color: #0000FF; }
 
+  /* Dropdown suggestions */
   #suggestions {
     position: absolute;
     top: calc(100% + 4px);
@@ -114,64 +118,32 @@
     padding: 0.6rem 1rem;
     font-size: 0.88rem;
     cursor: pointer;
-    color: var(--c-text);
+    color: #1a1a2e;
     border-bottom: 1px solid var(--c-border);
     transition: background 0.1s;
   }
 
   .suggestion-item:last-child { border-bottom: none; }
-  .suggestion-item:hover, .suggestion-item.highlighted { background: var(--c-accent-light); color: #0000FF; }
+  .suggestion-item:hover,
+  .suggestion-item.highlighted { background: var(--c-accent-light); color: #0000FF; }
 
+  /* Random button */
   #randomBtn {
-    padding: 0.65rem 1rem;
-    background: var(--c-random-bg);
-    color: var(--c-random-text);
+    padding: 0.65rem 1.2rem;
+    background: #0000FF;
+    color: #fff;
     border: none;
     border-radius: var(--radius);
     font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 6px;
     transition: opacity 0.15s;
   }
 
   #randomBtn:hover { opacity: 0.85; }
 
-  /* Alpha tabs */
-  .alpha-nav {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0;
-    margin-bottom: 1.5rem;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .alpha-btn {
-    width: 22px;
-    height: 22px;
-    padding: 0;
-    border-radius: 3px;
-    border: none;
-    background: transparent;
-    font-size: 0.72rem;
-    font-weight: 700;
-    cursor: pointer;
-    color: #0000FF;
-    transition: all 0.12s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .alpha-btn:hover { background: #0000FF; color: #fff; border-radius: 3px; }
-  .alpha-btn.active { background: #0000FF; color: #fff; border-radius: 3px; }
-  .alpha-btn.empty { opacity: 0.2; cursor: default; pointer-events: none; }
-
-  /* Stats bar */
+  /* Intro */
   #intro {
     background: var(--c-surface);
     border: 1.5px solid var(--c-border);
@@ -180,17 +152,11 @@
     margin-bottom: 1.5rem;
     line-height: 1.8;
     font-size: 0.92rem;
-    color: var(--c-text);
+    color: #1a1a2e;
   }
 
   #intro p { margin-bottom: 1.1rem; }
   #intro p:last-child { margin-bottom: 0; }
-
-  #statsBar {
-    font-size: 0.78rem;
-    color: var(--c-muted);
-    margin-bottom: 1rem;
-  }
 
   /* Entry card */
   .entry {
@@ -209,7 +175,7 @@
   .entry-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
   }
 
@@ -217,23 +183,24 @@
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: -0.01em;
-    color: var(--c-text);
+    color: #0000FF;
+  }
+
+  .entry-variante {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--c-muted);
+    font-style: italic;
+    margin-top: 0.1rem;
   }
 
   .entry-def-short {
     font-size: 0.85rem;
-    color: var(--c-muted);
+    color: #1a1a2e;
+    font-weight: 700;
     margin-top: 0.3rem;
     line-height: 1.5;
   }
-
-  .expand-icon {
-    color: var(--c-muted);
-    flex-shrink: 0;
-    transition: transform 0.2s;
-  }
-
-  .entry.expanded .expand-icon { transform: rotate(180deg); }
 
   .entry-body {
     display: none;
@@ -259,11 +226,9 @@
   .field-content {
     font-size: 0.88rem;
     line-height: 1.65;
-    color: var(--c-text);
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
   }
-
-  .field-content.italic { font-style: italic; }
-  .field-content.bold { font-weight: 700; }
 
   .tags {
     display: flex;
@@ -274,7 +239,7 @@
 
   .tag {
     background: var(--c-tag-bg);
-    color: var(--c-accent);
+    color: #0000FF;
     border: 1px solid var(--c-accent-border);
     border-radius: 20px;
     font-size: 0.75rem;
@@ -285,7 +250,6 @@
 
   .tag:hover { background: var(--c-accent-light); }
 
-  /* Loading / empty */
   .state-msg {
     text-align: center;
     padding: 3rem 1rem;
@@ -293,31 +257,21 @@
     font-size: 0.9rem;
   }
 
-  .letter-group-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--c-muted);
-    padding: 0.5rem 0 0.5rem;
-    margin-top: 0.5rem;
-    border-bottom: 1px solid var(--c-border);
-    margin-bottom: 0.75rem;
-  }
-
   mark { background: #fef08a; border-radius: 2px; padding: 0 1px; }
 
-  @media (max-width: 600px) {
-    header { padding: 1.5rem 1rem 1rem; }
-    .toolbar { flex-direction: column; }
-  }
   footer {
     background: #0000FF;
     color: rgba(255,255,255,0.75);
     text-align: center;
     padding: 1rem;
     font-size: 0.8rem;
-    margin-top: 3rem;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 1.5rem 1rem 1rem; }
+    .toolbar { flex-wrap: wrap; }
+    #randomBtn { width: 100%; justify-content: center; }
+    #intro { padding: 1.25rem; }
   }
 </style>
 </head>
@@ -338,10 +292,8 @@
       <input type="text" id="searchInput" placeholder="Rechercher un terme…" autocomplete="off" />
       <div id="suggestions"></div>
     </div>
-    <button id="randomBtn" style="padding:0.65rem 1.2rem;background:transparent;color:#0000FF;border:1.5px solid #0000FF;border-radius:var(--radius);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.15s;">Random</button>
+    <button id="randomBtn">Random</button>
   </div>
-
-
 
   <div id="intro">
     <p>Le cyberespace occupe aujourd'hui une place centrale dans nos sociétés. Il structure les communications, les échanges économiques, les infrastructures critiques, les activités des États et une part croissante de nos interactions quotidiennes. Longtemps perçu comme un domaine réservé aux informaticiens, il est devenu un espace où se rencontrent technologies, stratégies, intérêts économiques, enjeux politiques et comportements humains.</p>
@@ -349,173 +301,148 @@
     <p>Les entrées ont été conçues pour être accessibles aux non-spécialistes tout en conservant la rigueur nécessaire à une bonne compréhension des enjeux contemporains. Elles privilégient les usages les plus courants du vocabulaire cyber, qu'il soit technique, institutionnel ou opérationnel, et s'appuient autant que possible sur des exemples concrets.</p>
     <p>Parce que le cyberespace ne se résume ni à la technique ni à la sécurité, ce dictionnaire explore également ses dimensions humaines, culturelles et historiques. Il invite ainsi le lecteur à découvrir non seulement les outils et les menaces qui façonnent le monde numérique, mais aussi les idées, les pratiques et les rapports de force qui l'animent.</p>
   </div>
-  <div id="statsBar" style="display:none"></div>
   <div id="entries"></div>
 
 </div>
 
+<footer>© Auraponymous — 2026</footer>
+
 <script>
-// ─── CONFIG ────────────────────────────────────────────────────────────────
-// Remplace SHEET_ID par l'ID de ton Google Sheet
-// Format colonnes attendues : terme | definition | precision | renvois
-const SHEET_ID = '1BAsZeJRP0eYepRGD6hVNmNpXw1kcMPkbbt7s_W7nkjA';
-const SHEET_NAME = 'DDB_Cyber'; // Nom exact de l'onglet
-// ───────────────────────────────────────────────────────────────────────────
+// ─── CONFIG ───────────────────────────────────────────────────────────────
+const SHEET_ID   = '1BAsZeJRP0eYepRGD6hVNmNpXw1kcMPkbbt7s_W7nkjA';
+const SHEET_NAME = 'Dico_Cyber';
+// Colonnes : terme | variante | definition | precision | explication | renvois
+// ──────────────────────────────────────────────────────────────────────────
 
 let ALL = [];
-let currentLetter = 'ALL';
-let searchQuery = '';
-
-const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
-async function loadData() {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-  try {
-    const res = await fetch(url);
-    const text = await res.text();
-    // Google renvoie du JSON enrobé dans une fonction callback
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1]);
-    const rows = json.table.rows;
-
-    // Google ne renvoie pas les labels de colonnes — on lit par position
-    // A=0 terme, B=1 definition, C=2 precision, D=3 explication, E=4 renvois
-    const firstRow = rows[0]?.c?.map(c => (c?.v || '').toLowerCase().trim()) || [];
-    const hasHeader = firstRow.includes('terme');
-    const dataRows = hasHeader ? rows.slice(1) : rows;
-
-    ALL = dataRows.map(r => ({
-      terme:       r.c[0]?.v ?? '',
-      definition:  r.c[1]?.v ?? '',
-      precision:   r.c[2]?.v ?? '',
-      explication: r.c[3]?.v ?? '',
-      renvois:     r.c[4]?.v ?? '',
-    })).filter(r => r.terme);
-
-    const count = ALL.length;
-    document.getElementById('lastUpdate').textContent = `${count} terme${count > 1 ? 's' : ''} · mis à jour automatiquement`;
-    buildAlphNav();
-    render();
-  } catch(e) {
-    // N'afficher l'erreur que si l'intro est cachée (évite le message parasite au chargement)
-    if (document.getElementById('intro').style.display === 'none') {
-      document.getElementById('entries').innerHTML = `<div class="state-msg">⚠️ Impossible de charger les données.<br><small>Vérifie que le Google Sheet est bien partagé en lecture publique.</small></div>`;
-    }
-    console.error(e);
-  }
-}
 
 function normalize(str) {
   return (str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 }
 
-function getLettersWithEntries() {
-  const set = new Set(ALL.map(e => normalize(e.terme || '')[0]?.toUpperCase()));
-  return set;
+async function loadData() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  try {
+    const res  = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)?.[1]);
+    const rows = json.table.rows;
+
+    // Lire les headers depuis la première ligne pour mapper par nom
+    const firstRow = rows[0]?.c?.map(c => (c?.v || '').toLowerCase().trim()) || [];
+    const hasHeader = firstRow.includes('terme');
+    const dataRows  = hasHeader ? rows.slice(1) : rows;
+
+    // Index de chaque colonne par nom
+    const idx = {
+      terme:       firstRow.indexOf('terme'),
+      variante:    firstRow.indexOf('variante'),
+      definition:  firstRow.indexOf('definition'),
+      precision:   firstRow.indexOf('precision'),
+      explication: firstRow.indexOf('explication'),
+      renvois:     firstRow.indexOf('renvois'),
+    };
+
+    const col = (r, key) => (idx[key] >= 0 ? r.c[idx[key]]?.v : null) ?? '';
+
+    ALL = dataRows.map(r => ({
+      terme:       col(r, 'terme'),
+      variante:    col(r, 'variante'),
+      definition:  col(r, 'definition'),
+      precision:   col(r, 'precision'),
+      explication: col(r, 'explication'),
+      renvois:     col(r, 'renvois'),
+    })).filter(r => r.terme);
+
+    const count = ALL.length;
+    document.getElementById('lastUpdate').textContent =
+      `${count} terme${count > 1 ? 's' : ''} · mis à jour automatiquement`;
+  } catch(e) {
+    console.error(e);
+  }
 }
 
-function buildAlphNav() {
-  const nav = document.getElementById('alphNav');
-  const present = getLettersWithEntries();
-  // Marque les lettres sans entrées
-  nav.querySelectorAll('.alpha-btn[data-l]').forEach(btn => {
-    const l = btn.dataset.l;
-    if (l !== 'ALL') btn.classList.toggle('empty', !present.has(l));
-  });
-}
-
-
-
-function highlight(text, query) {
-  if (!query) return text;
-  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
-  return String(text).replace(re, '<mark>$1</mark>');
-}
-
+// ── Affichage d'une fiche ─────────────────────────────────────────────────
 function showEntry(entry) {
   document.getElementById('intro').style.display = 'none';
-  document.getElementById('statsBar').style.display = 'none';
   document.getElementById('suggestions').classList.remove('open');
 
-  const terme = entry.terme || '';
-  const variante = entry.variante || '';
-  const def = entry.definition || '';
-  const precision = entry.precision || '';
+  const terme       = entry.terme || '';
+  const variante    = entry.variante || '';
+  const def         = entry.definition || '';
+  const precision   = entry.precision || '';
   const explication = entry.explication || '';
-  const renvois = entry.renvois || '';
-  const renvoisArr = renvois ? String(renvois).split(/[,;]+/).map(s => s.trim()).filter(Boolean) : [];
-  const tagsHtml = renvoisArr.map(r => `<span class="tag" data-search="${r}">${r}</span>`).join('');
+  const renvois     = entry.renvois || '';
+  const renvoisArr  = renvois
+    ? String(renvois).split(/[,;]+/).map(s => s.trim()).filter(Boolean)
+    : [];
+  const tagsHtml = renvoisArr
+    .map(r => `<span class="tag" data-search="${r}">${r}</span>`)
+    .join('');
 
   document.getElementById('entries').innerHTML = `
     <div class="entry expanded">
       <div class="entry-header">
         <div>
-          <div class="entry-term">${terme}${variante ? `<span style="font-size:0.78rem;font-weight:400;color:var(--c-muted);margin-left:8px;font-style:italic;">aussi : ${variante}</span>` : ''}</div>
-          <div class="entry-def-short" style="font-weight:700;color:var(--c-text)">${def}</div>
+          <div class="entry-term">${terme}</div>
+          ${variante ? `<div class="entry-variante">${variante}</div>` : ''}
+          <div class="entry-def-short">${def}</div>
         </div>
       </div>
       <div class="entry-body" style="display:block">
-        ${precision ? `<div class="field-content">${precision}</div>` : ''}
-        ${explication ? `<div class="field-content" style="margin-top:0.5rem">${explication}</div>` : ''}
-        ${renvoisArr.length ? `<div class="field-label">Voir aussi</div><div class="tags">${tagsHtml}</div>` : ''}
+        ${precision   ? `<div class="field-content">${precision}</div>`   : ''}
+        ${explication ? `<div class="field-content">${explication}</div>` : ''}
+        ${renvoisArr.length
+          ? `<div class="field-label">Voir aussi</div><div class="tags">${tagsHtml}</div>`
+          : ''}
       </div>
     </div>`;
 }
 
+// ── Retour accueil ────────────────────────────────────────────────────────
+function showHome() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('suggestions').classList.remove('open');
+  document.getElementById('entries').innerHTML = '';
+  document.getElementById('intro').style.display = 'block';
+}
+
+// ── Suggestions ───────────────────────────────────────────────────────────
 function showSuggestions(q) {
   const sugg = document.getElementById('suggestions');
   if (!q) { sugg.classList.remove('open'); return; }
 
-  const matches = ALL.filter(e => normalize(e.terme).includes(normalize(q))).slice(0, 8);
+  const q_norm = normalize(q);
+  // Recherche dans terme ET variante
+  const matches = ALL.filter(e =>
+    normalize(e.terme).includes(q_norm) ||
+    normalize(e.variante || '').includes(q_norm)
+  ).slice(0, 8);
+
   if (!matches.length) { sugg.classList.remove('open'); return; }
 
-  sugg.innerHTML = matches.map((e, i) =>
-    `<div class="suggestion-item" data-idx="${i}">${e.terme}</div>`
-  ).join('');
+  sugg.innerHTML = matches.map((e, i) => {
+    const viaVariante = !normalize(e.terme).includes(q_norm);
+    return `<div class="suggestion-item" data-idx="${i}">
+      ${e.terme}${viaVariante && e.variante
+        ? `<span style="color:var(--c-muted);font-size:0.78rem;margin-left:6px;font-style:italic;">${e.variante}</span>`
+        : ''}
+    </div>`;
+  }).join('');
   sugg._matches = matches;
   sugg.classList.add('open');
 }
 
-function render() {
-  // kept for compatibility with random/home
-  const q = normalize(searchQuery);
-  if (!q) {
-    document.getElementById('intro').style.display = 'block';
-    document.getElementById('statsBar').style.display = 'none';
-    document.getElementById('entries').innerHTML = '';
-    document.getElementById('suggestions').classList.remove('open');
-    return;
-  }
+// ── Événements ────────────────────────────────────────────────────────────
 
-  // For random: show first match
-  const matches = ALL.filter(e => normalize(e.terme).includes(q));
-  if (matches.length) showEntry(matches[0]);
-}
-
-function handleEntryClick(e) {
-  // Clic sur un tag → recherche
-  const tag = e.target.closest('.tag');
-  if (tag) {
-    e.stopPropagation();
-    const s = tag.dataset.search;
-    document.getElementById('searchInput').value = s;
-    const match = ALL.find(e => normalize(e.terme) === normalize(s));
-    if (match) showEntry(match);
-    else showSuggestions(s);
-    return;
-  }
-
-  const entry = e.target.closest('.entry');
-  if (!entry) return;
-  entry.classList.toggle('expanded');
-}
-
-// Suggestions en temps réel
+// Frappe → suggestions
 document.getElementById('searchInput').addEventListener('input', e => {
   showSuggestions(e.target.value);
 });
 
+// Clavier dans le champ
 document.getElementById('searchInput').addEventListener('keydown', e => {
-  const sugg = document.getElementById('suggestions');
+  const sugg  = document.getElementById('suggestions');
   const items = sugg.querySelectorAll('.suggestion-item');
   let highlighted = sugg.querySelector('.suggestion-item.highlighted');
   let idx = Array.from(items).indexOf(highlighted);
@@ -526,31 +453,35 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
     idx = (idx + 1) % items.length;
     items[idx].classList.add('highlighted');
     items[idx].scrollIntoView({ block: 'nearest' });
+
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
     if (highlighted) highlighted.classList.remove('highlighted');
     idx = (idx - 1 + items.length) % items.length;
     items[idx].classList.add('highlighted');
     items[idx].scrollIntoView({ block: 'nearest' });
+
   } else if (e.key === 'Enter') {
     if (highlighted && sugg._matches) {
       const entry = sugg._matches[Array.from(items).indexOf(highlighted)];
       document.getElementById('searchInput').value = entry.terme;
       showEntry(entry);
     } else if (sugg._matches && sugg._matches.length) {
-      showEntry(sugg._matches[0]);
       document.getElementById('searchInput').value = sugg._matches[0].terme;
+      showEntry(sugg._matches[0]);
     }
     sugg.classList.remove('open');
+
   } else if (e.key === 'Escape') {
     sugg.classList.remove('open');
   }
 });
 
+// Clic sur une suggestion
 document.getElementById('suggestions').addEventListener('click', e => {
   const item = e.target.closest('.suggestion-item');
   if (!item) return;
-  const sugg = document.getElementById('suggestions');
+  const sugg  = document.getElementById('suggestions');
   const entry = sugg._matches[parseInt(item.dataset.idx)];
   document.getElementById('searchInput').value = entry.terme;
   showEntry(entry);
@@ -568,33 +499,33 @@ document.getElementById('randomBtn').addEventListener('click', () => {
   if (!ALL.length) return;
   const pick = ALL[Math.floor(Math.random() * ALL.length)];
   document.getElementById('searchInput').value = pick.terme;
-  document.getElementById('suggestions').classList.remove('open');
   showEntry(pick);
-  // Auto-expand le seul résultat
-  setTimeout(() => {
-    const first = document.querySelector('.entry');
-    if (first) first.classList.add('expanded');
-    first?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
 });
 
-// Clic sur le titre → retour accueil
+// Titre → accueil
 document.getElementById('homeLink').addEventListener('click', e => {
   e.preventDefault();
-  searchQuery = '';
-  document.getElementById('searchInput').value = '';
-  render();
+  showHome();
 });
 
-// Listener unique sur le container stable — ne se ré-attache pas à chaque render
-document.getElementById('entries').addEventListener('click', handleEntryClick);
+// Clic sur un tag → fiche directe ou suggestions
+document.getElementById('entries').addEventListener('click', e => {
+  const tag = e.target.closest('.tag');
+  if (tag) {
+    e.stopPropagation();
+    const s     = tag.dataset.search;
+    const match = ALL.find(en => normalize(en.terme) === normalize(s));
+    document.getElementById('searchInput').value = s;
+    if (match) showEntry(match);
+    else showSuggestions(s);
+    return;
+  }
+});
 
-// Initialisation propre
+// ── Init ──────────────────────────────────────────────────────────────────
 document.getElementById('entries').innerHTML = '';
 document.getElementById('intro').style.display = 'block';
-
 loadData();
 </script>
-<footer>© Auraponymous — 2026</footer>
 </body>
 </html>
