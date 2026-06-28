@@ -32,7 +32,8 @@ Ce dictionnaire est un enrichissement continu. Les entrées sont progressivement
 
 ## Citation
 
-Si vous utilisez ce dictionnaire dans un travail universitaire, une publication ou un projet pédagogique, merci de citer le projet et son auteur selon les normes APA-7 suivantes : Auraponymous. (n.d.). Dictionnaire de cybersécurité. GitHub Pages. https://auraponymous.github.io/Dico-Cyber/
+Si vous utilisez ce dictionnaire dans un travail universitaire, une publication ou un projet pédagogique, merci de citer le projet et son auteur selon les normes APA-7 suivantes : 
+- Auraponymous. (n.d.). Le Dico Cyber. https://auraponymous.github.io/Dico-Cyber/
 
 ## Licence
 
