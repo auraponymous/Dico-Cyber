@@ -6,49 +6,54 @@
 <title>Le Dico Cyber</title>
 <style>
   :root {
-    --c-bg: #f8f9fb;
-    --c-surface: #ffffff;
-    --c-border: rgba(0,0,0,0.1);
-    --c-border-hover: rgba(0,0,0,0.2);
-    --c-muted: #6b7280;
-    --c-accent-light: #eff6ff;
-    --c-accent-border: #bfdbfe;
-    --c-tag-bg: #f1f5f9;
-    --radius: 10px;
-    --radius-sm: 6px;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --c-bg: #0a0e14;
+    --c-surface: #11161f;
+    --c-border: #1e2a38;
+    --c-border-hover: #2a3a4d;
+    --c-neon: #00ff9d;
+    --c-neon-dim: #3d8b6f;
+    --c-muted: #5a6a7a;
+    --c-text: #c8d6e5;
+    font-family: 'Courier New', 'Consolas', monospace;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background: var(--c-bg);
-    color: #1a1a2e;
+    color: var(--c-text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
 
+  @keyframes blink { 50% { opacity: 0; } }
+
   header {
-    background: #0000FF;
-    color: #ffffff;
-    padding: 2rem 1.5rem 1.5rem;
+    background: var(--c-bg);
+    color: var(--c-neon);
+    padding: 2rem 1.5rem 1.25rem;
+    border-bottom: 1px solid #00ff9d33;
   }
 
   header h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.25rem;
+    letter-spacing: 1px;
+  }
+
+  header h1::before { content: "> "; opacity: 0.7; }
+  header h1::after {
+    content: "_";
+    opacity: 0.6;
+    animation: blink 1s steps(1) infinite;
   }
 
   header p {
-    font-size: 0.85rem;
-    opacity: 0.55;
-    font-weight: 400;
+    font-size: 0.78rem;
+    color: var(--c-muted);
+    margin-top: 4px;
   }
-
-  html, body { width: 100%; overflow-x: hidden; }
 
   .container {
     width: 100%;
@@ -59,7 +64,7 @@
     box-sizing: border-box;
   }
 
-  header .container { width: 100%; max-width: 860px; }
+  html, body { width: 100%; overflow-x: hidden; }
 
   /* Toolbar */
   .toolbar {
@@ -86,16 +91,18 @@
   #searchInput {
     width: 100%;
     padding: 0.65rem 1rem 0.65rem 2.5rem;
-    border: 1.5px solid var(--c-border);
-    border-radius: var(--radius);
-    font-size: 0.9rem;
+    border: 1px solid var(--c-border);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
     background: var(--c-surface);
-    color: #1a1a2e;
+    color: var(--c-neon);
     transition: border-color 0.15s;
     outline: none;
   }
 
-  #searchInput:focus { border-color: #0000FF; }
+  #searchInput::placeholder { color: var(--c-muted); }
+  #searchInput:focus { border-color: var(--c-neon); }
 
   /* Dropdown suggestions */
   #suggestions {
@@ -104,9 +111,9 @@
     left: 0;
     right: 0;
     background: var(--c-surface);
-    border: 1.5px solid #0000FF;
-    border-radius: var(--radius);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border: 1px solid var(--c-neon);
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
     z-index: 100;
     max-height: 280px;
     overflow-y: auto;
@@ -117,39 +124,41 @@
 
   .suggestion-item {
     padding: 0.6rem 1rem;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     cursor: pointer;
-    color: #1a1a2e;
+    color: var(--c-text);
     border-bottom: 1px solid var(--c-border);
     transition: background 0.1s;
   }
 
   .suggestion-item:last-child { border-bottom: none; }
   .suggestion-item:hover,
-  .suggestion-item.highlighted { background: var(--c-accent-light); color: #0000FF; }
+  .suggestion-item.highlighted { background: #00ff9d18; color: var(--c-neon); }
 
   /* Search button */
   #searchBtn {
     padding: 0.65rem 1.2rem;
-    background: #0000FF;
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    font-weight: 600;
+    background: transparent;
+    color: var(--c-neon);
+    border: 1px solid var(--c-neon);
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     cursor: pointer;
     white-space: nowrap;
-    transition: opacity 0.15s;
+    transition: all 0.15s;
   }
 
-  #searchBtn:hover { opacity: 0.85; }
+  #searchBtn:hover { background: #00ff9d18; }
 
   /* Alpha nav */
   .alpha-nav {
     display: flex;
     flex-wrap: nowrap;
-    gap: 3px;
-    margin-bottom: 0.75rem;
+    gap: 2px;
+    margin-bottom: 0.85rem;
     align-items: center;
     justify-content: space-between;
   }
@@ -158,13 +167,14 @@
     width: 22px;
     height: 22px;
     padding: 0;
-    border-radius: 3px;
+    border-radius: 2px;
     border: none;
-    background: transparent;
-    font-size: 0.72rem;
+    background: var(--c-surface);
+    font-size: 0.68rem;
+    font-family: inherit;
     font-weight: 700;
     cursor: pointer;
-    color: #0000FF;
+    color: var(--c-neon-dim);
     transition: all 0.12s;
     display: flex;
     align-items: center;
@@ -172,67 +182,71 @@
     flex-shrink: 0;
   }
 
-  .alpha-btn:hover { background: #0000FF; color: #fff; border-radius: 3px; }
-  .alpha-btn.active { background: #0000FF; color: #fff; border-radius: 3px; }
-  .alpha-btn.empty { opacity: 0.2; cursor: default; pointer-events: none; }
+  .alpha-btn:hover { background: var(--c-neon); color: var(--c-bg); }
+  .alpha-btn.active { background: var(--c-neon); color: var(--c-bg); }
+  .alpha-btn.empty { opacity: 0.25; cursor: default; pointer-events: none; color: var(--c-border); }
 
-  /* Random button — full width row under letters */
+  /* Random button */
   #randomBtn {
     width: 100%;
     padding: 0.6rem 1rem;
     background: transparent;
-    color: #0000FF;
-    border: 1.5px solid #0000FF;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    font-weight: 600;
+    color: var(--c-neon);
+    border: 1px solid var(--c-neon);
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.15s;
     margin-bottom: 1.5rem;
   }
 
-  #randomBtn:hover { background: #0000FF; color: #fff; }
+  #randomBtn:hover { background: #00ff9d18; }
 
   /* Liste des mots (vue par lettre) */
   .word-list-item {
     background: var(--c-surface);
-    border: 1.5px solid var(--c-border);
-    border-radius: var(--radius);
+    border: 1px solid var(--c-border);
+    border-left: 2px solid var(--c-neon-dim);
+    border-radius: 4px;
     padding: 0.85rem 1.1rem;
     margin-bottom: 0.6rem;
     cursor: pointer;
     transition: border-color 0.15s;
   }
 
-  .word-list-item:hover { border-color: var(--c-border-hover); }
-  .word-list-item.expanded { border-color: var(--c-accent-border); }
+  .word-list-item:hover { border-left-color: var(--c-neon); }
+  .word-list-item.expanded { border-left-color: var(--c-neon); }
 
   .word-list-term {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
-    color: #0000FF;
+    color: var(--c-neon);
+    letter-spacing: 0.3px;
   }
 
   .word-list-variante {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-style: italic;
-    color: #0000FF;
-    margin-top: 0.1rem;
+    color: #7fffd4;
+    margin-top: 0.15rem;
   }
 
   .word-list-def {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    color: #0000FF;
-    margin-top: 0.3rem;
-    line-height: 1.5;
+    color: var(--c-text);
+    margin-top: 0.4rem;
+    line-height: 1.55;
   }
 
   .word-list-body {
     display: none;
     margin-top: 0.85rem;
     padding-top: 0.85rem;
-    border-top: 1.5px solid var(--c-border);
+    border-top: 1px solid var(--c-border);
   }
 
   .word-list-item.expanded .word-list-body { display: block; }
@@ -240,45 +254,46 @@
   /* Entry card (recherche directe) */
   .entry {
     background: var(--c-surface);
-    border: 1.5px solid var(--c-border);
-    border-radius: var(--radius);
+    border: 1px solid var(--c-border);
+    border-left: 2px solid var(--c-neon);
+    border-radius: 4px;
     padding: 1.1rem 1.25rem;
     margin-bottom: 0.75rem;
   }
 
   .entry-term {
-    font-size: 1rem;
+    font-size: 0.98rem;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    color: #0000FF;
+    letter-spacing: 0.3px;
+    color: var(--c-neon);
   }
 
   .entry-variante {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 400;
-    color: #0000FF;
+    color: #7fffd4;
     font-style: italic;
-    margin-top: 0.1rem;
+    margin-top: 0.15rem;
   }
 
   .entry-def-short {
-    font-size: 0.85rem;
-    color: #0000FF;
+    font-size: 0.8rem;
+    color: var(--c-text);
     font-weight: 700;
-    margin-top: 0.3rem;
-    line-height: 1.5;
+    margin-top: 0.4rem;
+    line-height: 1.55;
   }
 
   .entry-body {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1.5px solid var(--c-border);
+    border-top: 1px solid var(--c-border);
   }
 
   .field-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--c-muted);
     margin-bottom: 0.3rem;
@@ -288,9 +303,9 @@
   .field-label:first-child { margin-top: 0; }
 
   .field-content {
-    font-size: 0.88rem;
-    line-height: 1.65;
-    color: #1a1a2e;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--c-muted);
     margin-bottom: 0.5rem;
   }
 
@@ -302,51 +317,53 @@
   }
 
   .tag {
-    background: var(--c-tag-bg);
-    color: #0000FF;
-    border: 1px solid var(--c-accent-border);
+    background: var(--c-bg);
+    color: var(--c-neon);
+    border: 1px solid #00ff9d55;
     border-radius: 20px;
-    font-size: 0.75rem;
-    padding: 2px 10px;
+    font-size: 0.72rem;
+    font-family: inherit;
+    padding: 3px 10px;
     cursor: pointer;
     transition: background 0.12s;
   }
 
-  .tag:hover { background: var(--c-accent-light); }
+  .tag:hover { background: #00ff9d18; }
 
   .state-msg {
     text-align: center;
     padding: 3rem 1rem;
     color: var(--c-muted);
-    font-size: 0.9rem;
+    font-size: 0.82rem;
   }
 
   footer {
-    background: #0000FF;
-    color: rgba(255,255,255,0.75);
+    background: var(--c-bg);
+    border-top: 1px solid #00ff9d33;
+    color: var(--c-muted);
     text-align: center;
     padding: 1rem;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
   }
 
   @media (max-width: 600px) {
     header { padding: 1.25rem 1rem 1rem; }
-    header h1 { font-size: 1.25rem; }
+    header h1 { font-size: 1.15rem; }
     .container { padding: 1rem 0.75rem; }
 
     .toolbar { gap: 8px; }
     #searchInput { font-size: 16px; padding: 0.6rem 0.9rem 0.6rem 2.3rem; }
-    #searchBtn { padding: 0.6rem 0.9rem; font-size: 0.8rem; }
+    #searchBtn { padding: 0.6rem 0.9rem; font-size: 0.72rem; }
 
     .alpha-nav { gap: 1px; }
     .alpha-btn { width: 16px; height: 20px; font-size: 0.58rem; }
 
-    #randomBtn { font-size: 0.8rem; padding: 0.55rem 1rem; }
+    #randomBtn { font-size: 0.72rem; padding: 0.55rem 1rem; }
 
     .entry, .word-list-item { padding: 0.85rem 1rem; }
-    .entry-term, .word-list-term { font-size: 0.92rem; }
-    .entry-def-short, .word-list-def { font-size: 0.82rem; }
-    .field-content { font-size: 0.85rem; }
+    .entry-term, .word-list-term { font-size: 0.88rem; }
+    .entry-def-short, .word-list-def { font-size: 0.78rem; }
+    .field-content { font-size: 0.8rem; }
 
     #suggestions { max-height: 220px; }
   }
@@ -361,7 +378,7 @@
 
 <header>
   <div class="container" style="padding-top:0;padding-bottom:0;">
-    <h1><a href="#" id="homeLink" style="color:inherit;text-decoration:none;cursor:pointer;">Le Dico Cyber</a></h1>
+    <h1><a href="#" id="homeLink" style="color:inherit;text-decoration:none;cursor:pointer;">LE_DICO_CYBER</a></h1>
     <p id="lastUpdate">Chargement…</p>
   </div>
 </header>
@@ -371,10 +388,10 @@
   <div class="toolbar">
     <div class="search-wrap">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Rechercher un terme…" autocomplete="off" />
+      <input type="text" id="searchInput" placeholder="rechercher_un_terme..." autocomplete="off" />
       <div id="suggestions"></div>
     </div>
-    <button id="searchBtn">Recherche</button>
+    <button id="searchBtn">[ RECHERCHE ]</button>
   </div>
 
   <div class="alpha-nav" id="alphNav">
@@ -406,7 +423,7 @@
     <button class="alpha-btn" data-l="Z">Z</button>
   </div>
 
-  <button id="randomBtn">Un mot aléatoire</button>
+  <button id="randomBtn">[ UN_MOT_ALÉATOIRE ]</button>
 
   <div id="entries"></div>
 
@@ -463,11 +480,10 @@ async function loadData() {
 
     const count = ALL.length;
     document.getElementById('lastUpdate').textContent =
-      `${count} terme${count > 1 ? 's' : ''} · amendés régulièrement`;
+      `${count} termes · amendés régulièrement`;
 
     markEmptyLetters();
 
-    // Affiche un mot aléatoire pour habiller la page d'accueil
     if (ALL.length) {
       const pick = ALL[Math.floor(Math.random() * ALL.length)];
       showEntry(pick);
@@ -484,7 +500,6 @@ function markEmptyLetters() {
   });
 }
 
-// ── Construction du contenu détaillé (champs communs) ───────────────────
 function buildBodyHtml(entry) {
   const precision   = entry.precision || '';
   const explication = entry.explication || '';
@@ -517,7 +532,6 @@ function buildHeaderHtml(entry) {
   `;
 }
 
-// ── Affichage d'une fiche complète (recherche directe) ──────────────────
 function showEntry(entry) {
   document.getElementById('suggestions').classList.remove('open');
   document.getElementById('entries').innerHTML = `
@@ -527,7 +541,6 @@ function showEntry(entry) {
     </div>`;
 }
 
-// ── Affichage de la liste des mots pour une lettre ───────────────────────
 function showLetterList(letter) {
   document.getElementById('searchInput').value = '';
   document.getElementById('suggestions').classList.remove('open');
@@ -556,15 +569,18 @@ function showLetterList(letter) {
   document.getElementById('entries')._matches = matches;
 }
 
-// ── Retour accueil ────────────────────────────────────────────────────────
 function showHome() {
   document.getElementById('searchInput').value = '';
   document.getElementById('suggestions').classList.remove('open');
-  document.getElementById('entries').innerHTML = '';
   document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+  if (ALL.length) {
+    const pick = ALL[Math.floor(Math.random() * ALL.length)];
+    showEntry(pick);
+  } else {
+    document.getElementById('entries').innerHTML = '';
+  }
 }
 
-// ── Suggestions ───────────────────────────────────────────────────────────
 function showSuggestions(q) {
   const sugg = document.getElementById('suggestions');
   if (!q) { sugg.classList.remove('open'); return; }
@@ -600,8 +616,6 @@ function doSearch() {
   sugg.classList.remove('open');
   document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
 }
-
-// ── Événements ────────────────────────────────────────────────────────────
 
 document.getElementById('searchInput').addEventListener('input', e => {
   showSuggestions(e.target.value);
@@ -660,14 +674,12 @@ document.addEventListener('click', e => {
   }
 });
 
-// Lettres
 document.getElementById('alphNav').addEventListener('click', e => {
   const btn = e.target.closest('.alpha-btn');
   if (!btn || btn.classList.contains('empty')) return;
   showLetterList(btn.dataset.l);
 });
 
-// Random
 document.getElementById('randomBtn').addEventListener('click', () => {
   if (!ALL.length) return;
   const pick = ALL[Math.floor(Math.random() * ALL.length)];
@@ -676,13 +688,11 @@ document.getElementById('randomBtn').addEventListener('click', () => {
   showEntry(pick);
 });
 
-// Titre → accueil
 document.getElementById('homeLink').addEventListener('click', e => {
   e.preventDefault();
   showHome();
 });
 
-// Clics dans la zone des entrées : déplier une fiche de la liste, ou suivre un tag
 document.getElementById('entries').addEventListener('click', e => {
   const tag = e.target.closest('.tag');
   if (tag) {
@@ -702,7 +712,6 @@ document.getElementById('entries').addEventListener('click', e => {
   }
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────
 document.getElementById('entries').innerHTML = `<div class="state-msg">Chargement…</div>`;
 loadData();
 </script>
