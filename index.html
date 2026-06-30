@@ -338,8 +338,8 @@
     #searchInput { font-size: 16px; padding: 0.6rem 0.9rem 0.6rem 2.3rem; }
     #searchBtn { padding: 0.6rem 0.9rem; font-size: 0.8rem; }
 
-    .alpha-nav { gap: 2px; }
-    .alpha-btn { width: 18px; height: 22px; font-size: 0.62rem; }
+    .alpha-nav { gap: 1px; }
+    .alpha-btn { width: 16px; height: 20px; font-size: 0.58rem; }
 
     #randomBtn { font-size: 0.8rem; padding: 0.55rem 1rem; }
 
@@ -352,7 +352,8 @@
   }
 
   @media (max-width: 380px) {
-    .alpha-btn { width: 15px; font-size: 0.55rem; }
+    .alpha-nav { gap: 0; }
+    .alpha-btn { width: 13px; font-size: 0.5rem; }
   }
 </style>
 </head>
@@ -465,6 +466,12 @@ async function loadData() {
       `${count} terme${count > 1 ? 's' : ''} · amendés régulièrement`;
 
     markEmptyLetters();
+
+    // Affiche un mot aléatoire pour habiller la page d'accueil
+    if (ALL.length) {
+      const pick = ALL[Math.floor(Math.random() * ALL.length)];
+      showEntry(pick);
+    }
   } catch(e) {
     console.error(e);
   }
